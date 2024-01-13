@@ -1,29 +1,40 @@
-
 import {useEffect, useState} from "react";
-import {ProductModel} from "../../models/responses/ProductModel";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import ProductService from "../../services/ProductService";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchProducts} from "../../store/slices/productSlice";
+import {AppDispatch} from "../../store/configureStore";
 
 type Props = {};
 
 const Homepage = (props: Props) => {
-	const [products, setProducts] = useState<ProductModel[]>([]);
+	// const [products, setProducts] = useState<ProductModel[]>([]);
 
+	// useEffect(() => {
+	// 	fetchProducts();
+	// }, []);
+
+	// // 1- Birden fazla noktada kullanılabilir
+	// // 2- Sorumluluğun UI dosyası üzerinden kalkması
+	// // 3- Ortak bi noktadan yönetebilmek için
+	// const fetchProducts = () => {
+	// 	let service: ProductService = new ProductService();
+	// 	service.getAll().then(response => {
+	// 		setProducts(response.data.products);
+	// 	});
+	// };
+
+	const productsState = useSelector((state: any) => state.product);
+	const dispatch = useDispatch<AppDispatch>();
 	useEffect(() => {
-		fetchProducts();
+		dispatch(fetchProducts());
 	}, []);
-
-	const fetchProducts = () => {
-		let service: ProductService = new ProductService();
-		service.getAll().then(response => {
-			setProducts(response.data.products);
-		});
-	};
+	
 
 	return (
 		<div className="container">
 			<div className="row">
-				{products.map(product => (
+			{productsState.products.map((product: any) => (
 					<div key={product.id} className="col-3">
 						<ProductCard product={product} />
 					</div>
